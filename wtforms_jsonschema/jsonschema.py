@@ -116,7 +116,7 @@ class WTFormToJSONSchema(object):
     def convert_formfield(self, name, field, json_schema):
         widget = field.widget
         target_def = {
-            'title': field.label.text,
+            'title': str(field.label.text),
             'description': field.description,
         }
         if field.flags.required:
@@ -130,7 +130,7 @@ class WTFormToJSONSchema(object):
         if params is not None:
             target_def.update(params)
         elif ftype == 'FormField':
-            target_def.update(self.convert_form(field.form_class(obj=getattr(field, '_obj', None))))
+            target_def.update(self.convert_form(field.form))
         elif ftype == 'FieldList':
             if not self.include_array_title:
                 target_def.pop('title')
@@ -159,7 +159,7 @@ class WTFormToJSONSchema(object):
                 values.append(val)
 
         target_def = {
-            'title': field.label.text,
+            'title': str(field.label.text),
             'description': field.description,
             'enum': values,
             'ux-widget-choices': list(field.choices),
@@ -170,7 +170,7 @@ class WTFormToJSONSchema(object):
 
     def convert_RadioField(self, name, field, json_schema):
         target_def = {
-            'title': field.label.text,
+            'title': str(field.label.text),
             'description': field.description,
             'enum': [x for x, y in field.choices],
             'ux-widget': 'radio',
